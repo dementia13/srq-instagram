@@ -16,6 +16,9 @@ public class ParseApp extends Application{
                 .server("http://srq-instagram.herokuapp.com/parse")
                 .build();
 
-        Parse.initialize(configuration);
+        Parse.initialize(new Parse.Configuration.Builder(this)
+            .applicationId("srq-instagram")
+            .clientKey("srq-instagram")
+            .server("https://srq-instagram.herokuapp.com/parse/").build());
     }
 }

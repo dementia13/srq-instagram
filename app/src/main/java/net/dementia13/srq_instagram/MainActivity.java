@@ -1,56 +1,62 @@
 package net.dementia13.srq_instagram;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.parse.LogInCallback;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText etUsername;
-    private EditText etPassword;
-    private Button btnLogin;
+    public static  final String TAG = "Main Activity";
+    private EditText etDescription;
+    private Button btnCaptureImage;
+    private ImageView ivPostImage;
+    private Button btnSubmit;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//    queryPosts();
+/*
+    btnSubmit.setOnClickListener(new View.OnClickListener() {
+       @Override
+       public void onClick(View v) {
+           String description = etDescription.getText().toString();
+           if (description.isEmpty()) {
+               Toast.makeText(MainActivity.this, "Description cannot be empty", Toast.LENGTH_SHORT).show();
+               return;
+           }
+           ParseUser currentUser = ParseUser.getCurrentUser();
+           savePost(description, currentUser);
+        }
+    });
+    */
 
-        etUsername = findViewById(R.id.username_et);
-        etPassword = findViewById(R.id.password_et);
-        btnLogin = findViewById(R.id.login_btn);
 
-        loginBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                final String username = etUsername.getText().toString();
-                final String password = etPassword.getText().toString();
-
-                login(username, password);
-            }
-        });
+    private void savePost(String description, ParseUser currentUser) {
+       // Post post =
     }
 
-    private void login(String username, String password){
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
+    private void queryPosts() {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+        query.findInBackground(new FindCallback<Post>() {
             @Override
-            public void done(ParseUser user, com.parse.ParseException e) {
-                if (e == null) {
-                    Log.d("LoginActivity", "Login successful!");
-                    final Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                } else {
-                    Log.e("LoginActivity", "Login failure.");
-                    e.printStackTrace();
+            public void done(List<Post> posts, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with getting posts", e);
+                    return;
+                }
+                for (Post post : posts) {
+                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post);
                 }
             }
         });
     }
+
 }
